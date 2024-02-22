@@ -78,9 +78,9 @@ use("esports-relation");
 // ]);
 
 // db.students.insertOne({
-//   name: "Rina",
+//   name: "Kamal",
 //   address: "Kalanki",
-//   email: "rina@gmail.com",
+//   email: "kamal@gmail.com",
 //   enrolledCourseIds: [
 //     ObjectId("65d5a94d51b5134f2d42ac63"),
 //     ObjectId("65d5a94d51b5134f2d42ac65"),
@@ -97,14 +97,44 @@ use("esports-relation");
 //   ],
 // });
 
-db.students.aggregate([
+// db.students.aggregate([
+//   { $match: {} },
+//   {
+//     $lookup: {
+//       from: "courses",
+//       localField: "enrolledCourseIds",
+//       foreignField: "_id",
+//       as: "courseDetails",
+//     },
+//   },
+//   {
+//     $project: {
+//       name: 1,
+//       address: 1,
+//       email: 1,
+
+//       "courseDetails.name": 1,
+//       "courseDetails.duration": 1,
+//     },
+//   },
+// ]);
+
+db.courses.aggregate([
   { $match: {} },
   {
     $lookup: {
-      from: "courses",
-      localField: "enrolledCourseIds",
-      foreignField: "_id",
-      as: "courseDetails",
+      from: "students",
+      localField: "_id",
+      foreignField: "enrolledCourseIds",
+      as: "studentData",
+    },
+  },
+  {
+    $project: {
+      name: 1,
+      duration: 1,
+      "studentData.name": 1,
+      "studentData.email": 1,
     },
   },
 ]);
